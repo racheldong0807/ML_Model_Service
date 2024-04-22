@@ -1,5 +1,6 @@
 from flask_restful import Resource
 from flask import request
+import logging
 
 from ml_model_service.schema import ModelResponseSchema, ModelInfoResponseSchema
  
@@ -112,10 +113,25 @@ class ModelTraining(Resource):
             in: query
             description: The unique model id.
             type: string
+            required: true
             example: meta-llama/Llama-2-7b
+          - name: platform
+            in: query
+            description: The host platform to train the model.
+            type: string
+            required: true
+            default: Neusoft
+            enum:
+              - Neusoft
+              - Huawei
+              - Baidu
+              - HIKVISON
         responses:
           200:
             description: Training triggered successfully.
         """
+        model_id = request.args.get('model_id')
+        platform = request.args.get('platform')
         # Train model
+        logging.info(f"Submitted training job for {model_id} to {platform}")
         return None, 200
